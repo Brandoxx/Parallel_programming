@@ -1,0 +1,19 @@
+Un programa que imprima un saludo dependiendo de dos threads
+
+procedure main(argc, argv[]):
+
+    thread_count := integet(argv[1])
+    for thread_count := 0 to thread_count do
+        create_thread(greet)
+
+
+print "Hello from main thread"
+
+end procedure
+
+
+procedure greet(thread_number):
+
+print "Hello from thread " + thread_number
+
+end procedure

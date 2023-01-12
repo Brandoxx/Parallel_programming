@@ -1,0 +1,15 @@
+Un programa que imprima un saludo dependiendo de dos threads
+
+procedure main:
+create_thread(greet)
+
+print "Hello from main thread"
+
+end procedure
+
+
+procedure greet:
+
+print "Hello from secondary thread"
+
+end procedure

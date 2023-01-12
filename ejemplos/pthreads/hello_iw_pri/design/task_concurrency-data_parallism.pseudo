@@ -1,0 +1,25 @@
+// Indeterminism
+procedure main(argc, argv[])
+  // create thread_count as the result of converting argv[1] to integer
+  thread_count := integer(argv[1])
+
+  // Task concurrency -> separation of concerns
+  create_thread(read)
+  // Data parallelism -> increase performance
+  for thread_number := 0 to thread_count do
+    create_thread(calculate, thread_number)
+  end for
+  // Task concurrency -> separation of concerns
+  create_thread(merge)
+  create_thread(print)
+
+  print("Hello from main thread")
+end procedure
+
+procedure task1(rank)
+  print("Hello from secondary thread ", rank)
+end procedure
+
+procedure task2(rank)
+  print("Hello from secondary thread ", rank)
+end procedure
