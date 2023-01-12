@@ -1,0 +1,18 @@
+// note: using 0...n indexation
+procedure main(argv):
+  w := argv[0] as int 
+  // we add an array of semaphores to give order to the solution
+  shared w_ready := create an array of w + 1 semaphores(0)  // we use on dummy semaphore at index 0 to simplify the pseudo
+  signal(w_ready[0]) // signaling the first semaphore so that the first worker can run
+  for i:= 1...w do
+    create_thread(thread_w(i-1, statement_w))
+  end for
+end procedure
+
+procedure thread_w(predecesor, statement_w):
+  int me := predecesor + 1 // the index of the semaphore to signal
+  wait(w_ready[predecesor]) // if it arrives here first, it waits for its predecessor to signal him
+  do statement_w    // it executes its statement
+  signal(w_ready[me]) // it signals its successor "I'm ready"
+end procedure
+

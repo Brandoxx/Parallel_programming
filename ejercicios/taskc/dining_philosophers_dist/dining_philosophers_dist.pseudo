@@ -1,0 +1,72 @@
+procedure main(argc, argv[]):
+  philosopherNumber := argv[1]
+  chopsticksNumber := philosopherNumber
+  chopsticks[] := create_semaphores(chopsticksNumber, 1)
+  if (philosopherNumber < 2) then
+    alonePhilosopher(0)
+  else
+    if (isButler == true)
+      butler()
+    else
+      philosopher(id)
+    end if
+  end if
+end procedure
+
+procedure butler():
+  while true do
+    petition := receive_philosopher_petition()
+    petition_chopstick := petition
+    if send_left_chopstick(petition, petition_chopstick)
+      get_left_chopstick(petition_chopstick)
+    end if
+    if send_right_chopstick(petition, petition_chopstick)
+      get_right_chopstick(petition_chopstick)
+    end if
+    if receive_left_chopstick(anyPhilosopher, petition_chopstick)
+      get_left_chopstick(petition_chopstick)
+    end if
+    if receive_right_chopstick(anyPhilosopher, petition_chopstick)
+      get_right_chopstick(petition_chopstick)
+    end if
+  end while
+end for
+
+end procedure
+
+procedure philosopher(id):
+  while true do
+    send_philosopher_petition(id)
+    think()
+    receive_left_chopstick(id)
+    receive_right_chopstick(id)
+    eat()
+    send_left_chopstick(id)
+    send_right_chopstick(id)
+  end while
+end procedure
+
+procedure alonePhilosopher(id):
+  while true do
+    think()
+    get_right_chopstick(id)
+    eat()
+    put_right_chopstick(id)
+  end while
+end procedure
+
+procedure get_left_chopstick(id):
+  wait(chopsticks[(id + 1) mod 5])
+end procedure
+
+procedure get_right_chopstick(id):
+  wait(chopsticks[id])
+end procedure
+
+procedure put_left_chopstick(id):
+  signal(chopsticks[(id + 1) mod 5])
+end procedure
+
+procedure put_right_chopstick(id):
+  signal(chopsticks[id])
+end procedure

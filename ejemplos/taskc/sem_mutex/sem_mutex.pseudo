@@ -1,0 +1,18 @@
+procedure main:
+  shared can_access_count := create_semaphore(1) // 1 means only one thread can access the count at a time
+  shared count := 0 // shared means that all threads can access this variable
+  create_thread(thread_a)
+  create_thread(thread_b)
+end procedure
+
+procedure thread_a:
+  wait(can_access_count) // wait until we can access the count
+  count := count + 1 // increment the count
+  signal(can_access_count) // signal that we are done accessing the count
+end procedure
+
+procedure thread_b:
+  wait(can_access_count) // wait until we can access the count
+  count := count + 1 // increment the count
+  signal(can_access_count) // signal that we are done accessing the count
+end procedure

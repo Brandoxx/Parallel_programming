@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <time.h>
 #include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,6 +33,9 @@ if (numbers) {
     if (error == EXIT_SUCCESS) {
         error = read_numbers(numbers);
         if (error == EXIT_SUCCESS) {
+            // Get time before prime numbers calculation
+            struct timespec start_time;
+            error = clock_gettime(CLOCK_MONOTONIC, &start_time);
             array_prime_numbers_t* prime_numbers =
              malloc(sizeof(array_prime_numbers_t));
             array_prime_numbers_init(prime_numbers);
@@ -42,13 +46,19 @@ if (numbers) {
                 if (error == EXIT_SUCCESS) {
                     array_prime_numbers_destroy(prime_numbers);
                     free(prime_numbers);
-                    print_result(numbers);
-                    array_number_destroy(numbers);
-                    free(numbers);
                 }
             }
+            // Get time after prime numbers calculation
+            struct timespec end_time;
+            error = clock_gettime(CLOCK_MONOTONIC, &end_time);
+            //time in nanoseconds
+            double elapsed_time = (end_time.tv_sec - start_time.tv_sec);
+            printf("Elapsed time: %f seconds\n", elapsed_time/1000000);
+            print_result(numbers);
         }
     }
+    array_number_destroy(numbers);
 }
+free(numbers);
 return error;
 }

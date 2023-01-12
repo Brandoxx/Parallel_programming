@@ -1,0 +1,18 @@
+procedure main:
+  shared a1_finished := semaphore[thread_count] // can_run_b1
+  for i := 0 to thread_count - 1 do
+    a1_finished[i] := create_semaphore(0)
+  end for
+  signal a1_finished[0] // can_run_b1[0] := true
+  create_thread(thread_count, secondary)
+end procedure
+
+// a0 < a1 < a2 ... < aN
+
+procedure secondary:
+  wait(a1_finished[thread_number]) // can_run_b1[my_id - 1]
+  statement a1
+  if thread_number < thread_count - 1 then
+    signal(a1_finished[thread_number + 1]) // can_run_b1[my_id]
+  end if
+end procedure

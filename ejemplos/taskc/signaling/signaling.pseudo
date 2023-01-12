@@ -1,0 +1,15 @@
+procedure main:
+  shared a1_finished := create_semaphore(0) // can_run_b1
+  create_thread(thread_a)
+  create_thread(thread_b)
+end procedure
+// When code a1 has to be executed first, it will work an then signal the semaphore
+procedure thread_a:
+  statement a1 // Execute a1
+  signal(a1_finished) // Signal that a1 is finished
+end procedure
+
+procedure thread_b:
+  wait(a1_finished) // Wait for a1 to finish
+  statement b1 // Execute b1
+end procedure

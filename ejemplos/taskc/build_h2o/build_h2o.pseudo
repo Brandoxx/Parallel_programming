@@ -1,0 +1,29 @@
+procedure main:
+  shared hydrogen_multiplex := create_semaphore(2)  // 2 hydrogen atoms can be in the critical section at the same time
+  shared oxygen_multiplex := create_semaphore(1)  // 1 oxygen atom can be in the critical section at the same time
+  shared device_barrier := crate_barrier(3)  // 3 atoms are needed to create a molecule
+
+  while true do  // infinite loop
+    case read_char() of  // read the next atom
+      'H': create_thread(hydrogen)  // create a hydrogen thread
+      'O': create_thread(oxygen)  // create a oxygen thread
+      EOF: return  // end of input
+    end case  // read_char()
+  end while  // true
+end procedure  // main
+
+procedure hydrogen:  // hydrogen atom thread
+  wait(hydrogen_multiplex)  // wait for the hydrogen semaphore
+  wait(device_barrier)  // wait for the device barrier
+  bond()  // bond with the other atoms
+  wait(device_barrier)  // wait for the device barrier
+  signal(hydrogen_multiplex)  // signal the hydrogen semaphore
+end procedure
+
+procedure oxygen:  // oxygen atom thread
+  wait(oxygen_multiplex)  // wait for the oxygen semaphore
+  wait(device_barrier)  // wait for the device barrier
+  bond()  // bond with the other atoms
+  wait(device_barrier)  // wait for the device barrier
+  signal(oxygen_multiplex)  // signal the oxygen semaphore
+end procedure

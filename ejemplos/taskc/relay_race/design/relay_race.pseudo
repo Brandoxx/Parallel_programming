@@ -1,0 +1,47 @@
+procedure main(argc, argv[]):
+  if argc = 4 then // check if the user has entered the correct number of arguments
+    shared team_count := integer(argv[1]) // get the number of teams from the user
+    shared stage1_delay := integer(argv[2]) // get the delay for stage 1 from the user
+    shared stage2_delay := integer(argv[3]) // get the delay for stage 2 from the user
+    shared position := 0 // initialise the position of the first team to 0
+
+    shared start_barrier := create_barrier(team_count) // Creates a barrier for the teams to wait at the start
+    shared batons := create_semaphores(team_count, 0) // Creates a semaphore for each team to wait for the baton
+    shared finish_mutex := create_mutexes(1) // Creates a mutex for the teams to wait for the finish line
+    // For each team, create a thread and pass the team number as an argument
+    for team := 0 to team_count do
+      create_thread(run_stage1, team)
+      create_thread(run_stage2, team)
+    end for
+  else
+    // If the user has not entered the correct number of arguments, print an error message
+    print "usage: relay_race team_count stage1_delay stage2_delay"
+  end if
+end procedure
+
+// This procedure is run by each team in stage 1, they wait for the start barrier, then run the stage. 
+// At the end of the stage, they pass the baton to the next teammate 
+procedure run_stage1(team_number):
+  // Wait to start shoot
+  wait(start_barrier)
+  delay(stage1_delay)
+  // Relay baton to its partner
+  signal(batons[team_number])
+end function
+
+// This procedure is run by each team in stage 2, they wait for the baton, then run the stage.
+// At the end of the stage, they pass the finish line
+procedure run_stage2(team_number):
+  // Wait for baton
+  wait(batons[team_number])
+  // run stage 2
+  delay(stage2_delay)
+  // Pass finish line
+  wait(finish_mutex)
+    declare constant my_team_position = ++position // Set the position of the team to the arrival position
+    if my_team_position <= 3 then // If the team has finished in the top 3, print their position
+      print('Place ', my_team_position, ': team ', team_number) // Print the position of the team
+    end if
+  // Release finish line
+  signal(finish_mutex)
+end procedure

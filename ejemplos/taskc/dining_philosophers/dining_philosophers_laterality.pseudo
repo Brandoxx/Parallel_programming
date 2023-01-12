@@ -1,0 +1,39 @@
+procedure main(argc, argv[]):
+  shared chopsticks[] := create_semaphores(5, 1)  // 5 chopsticks
+
+  for id := 0 to 5 do  // 5 philosophers
+    create_thread(philosopher, id)  // create philosopher thread
+  end for  // for id := 0 to 5 do
+end procedure 
+
+procedure philosopher(id):  // id is the philosopher's id
+  while true do  // forever
+    think()  // think for a while
+    if id % 2 = 0 then  // even philosopher
+      get_right_chopstick(id)  // get right chopstick
+      get_left_chopstick(id)  // get left chopstick
+    else  // odd philosopher
+      get_left_chopstick(id)  // get left chopstick
+      get_right_chopstick(id)  // get right chopstick
+    end if  // if id % 2 = 0 then
+    eat()  // eat for a while
+    put_left_chopstick(id)  // put left chopstick
+    put_right_chopstick(id)  // put right chopstick
+  end while
+end procedure
+
+procedure get_left_chopstick(id):  // id is the philosopher's id
+  wait(chopsticks[(id + 1) mod 5])  // wait for left chopstick
+end procedure
+
+procedure get_right_chopstick(id):
+  wait(chopsticks[id])  // wait for right chopstick
+end procedure
+
+procedure put_left_chopstick(id):
+  signal(chopsticks[(id + 1) mod 5])  // signal left chopstick
+end procedure
+
+procedure put_right_chopstick(id):
+  signal(chopsticks[id])  // signal right chopstick
+end procedure

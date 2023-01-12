@@ -1,0 +1,93 @@
+procedure main:
+    Let Numbers be a dynamic 64-bit unsigned integer array
+    Let numberOfThreads be a 64-bit unsigned integer
+    numberOfThreads := system.getNumberOfThreads()
+    if command line arguments are not 2:
+        print "Usage: ./a.out numberOfThreads"
+        exit
+    end if
+    call read_numbers(Numbers)
+    Let prime_numbers be a dynamic 64-bit unsigned integer array
+    call prime_numbers_calculation(max_number)
+
+    call create_threads(Numbers, prime numbers)
+    call print_numbers (Numbers)
+end main
+
+
+procedure read_numbers (var Numbers: dynamic 64-bit unsigned integer array):
+While not end of file:
+    if number is not a valid integer
+        print error message
+        exit
+    else
+        if number is out of range
+            set out of range flag to 1
+        if number is negative
+            number = -number
+            set negative flag to 1
+        Let sums be a dynamic 64-bit unsigned integer arrays array
+        Add number to Numbers with all flags
+end read_numbers
+
+
+procedure print_result (var Numbers : dynamic 64-bit unsigned integer array):
+    call print_total_results(Numbers)
+    call print_numbers(Numbers)
+end print_numbers
+
+procedure print_total_result (var Numbers : dynamic 64-bit unsigned integer array):
+Let total be a 64-bit integer initially set to 0
+Let total_numbers be a 64-bit integer initially set to Numbers length    
+for every number in Numbers
+        if number is not out of range
+            total = total + Number_sum_number
+end for
+
+end print_total_result
+procedure print_numbers (var Numbers : dynamic 64-bit unsigned integer array):
+for number in Numbers
+    print number
+    if number is out of range
+        print NA
+    else if number is negative
+        if number is even
+            call even_print(number)
+        else if number is odd
+            call odd_print(number)
+    else
+        print number of Goldbach additions
+end for
+end print_numbers
+
+procedure even_print (var Number : 64-bit integer):
+    for counter = 0 to length(Number addition array)
+        print Number addition array[counter][1]
+        print +
+        print Number addition array[counter][2]
+    end for
+end even_print
+
+procedure odd_print (var Number : 64-bit integer):
+for counter = 0 to length(Number addition array)
+    print Number addition array[counter][1]
+    print +
+    print Number addition array[counter][2]
+    print +
+    print Number addition array[counter][3]
+end for
+end odd_print
+
+procedure calculate_numbers(var Numbers : dynamic 64-bit unsigned integer array,
+     var prime_numbers : dynamic 64-bit unsigned integer array):
+parallel for number in Numbers
+    if number is not out of range
+        call calculate_number(number, prime_numbers)
+end for
+
+end calculate_numbers
+
+procedure mpiDynamicMapping (var Numbers : dynamic 64-bit unsigned integer array,
+     var prime_numbers : dynamic 64-bit unsigned integer array):
+
+     

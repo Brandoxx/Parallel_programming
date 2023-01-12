@@ -1,0 +1,41 @@
+# Enunciado
+
+Permita que varios lectores puedan leer de un medio común, pero sólo un escritor puede modificarlo a la vez. Por cada letra R que se lea de la entrada estándar se crea un hilo lector (reader), y por cada W que se lea de la entrada estándar se crea un hilo escritor (writer). Varios hilos pueden invocar la función read() al mismo tiempo, pero sólo un único hilo puede invocar write() a la vez. Esta puede considerarse una exlusión mutua categórica (categorical mutual exclusion) porque permite paralelismo de una categoría de hilos, pero excluye los de otra.
+
+    procedure main:
+      shared can_access_medium := create_semaphore(1)
+      shared can_access_reading := create_semaphore(1)
+      shared reading_count := 0
+
+    while true:
+      case read_char() of:
+        'R': create_thread(reader)
+        'W': create_thread(writer)
+        EOF: return
+      end case
+    end while
+    end procedure
+
+    procedure reader:
+      wait(can_access_reading)
+        reading_count := reading_count + 1
+        if reading_count = 1 then
+          wait(can_access_medium)
+        end if
+      signal(can_access_reading)
+      read()
+      wait(can_access_reading)
+        reading_count := reading_count - 1
+        if reading_count = 0 then
+          signal(can_access_medium)
+        end if
+      signal(can_access_reading)
+    end procedure
+
+    procedure writer:
+      wait(can_access_medium)
+      write()
+      signal(can_access_medium)
+    end procedure
+
+Asegúrese de que su implementación genera los resultados deseados y no provoca anomalías de memoria ni de concurrencia.

@@ -1,0 +1,25 @@
+procedure main:
+  shared a1_finished := create_semaphore(0) // can_run_b1
+  shared b1_finished := create_semaphore(0) // can_run_b2
+  create_thread(thread_a)
+  create_thread(thread_b)
+  create_thread(thread_c)
+end procedure
+
+// a1 < b1 < c1
+
+procedure thread_a:
+  statement a1
+  signal(a1_finished)
+end procedure
+
+procedure thread_b:
+  wait(a1_finished)
+  statement b1
+  signal(b1_finished)
+end procedure
+
+procedure thread_c:
+  wait(b1_finished)
+  statement c1
+end procedure

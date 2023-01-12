@@ -1,0 +1,34 @@
+//  This is a simple rendevous point for the two types of threads
+main:
+	while true:
+        private 
+		case read_char() of:
+			'M': create_thread(male)
+			'W': create_thread(female)
+			EOF: return
+        private danceTime = random(1000)
+        pairLimit = read_char()
+        semaphoreMan = create_semaphore(0)
+        semaphoreWoman = create_semaphore(0)
+        dancingSemaphore = create_semaphore(0)
+        danceLimit = create_semaphore(pairLimit * 2)
+
+male:
+    // This ensures that there's at least one woman waiting
+    signal(semaphoreWoman)  //  Signal the woman semaphore
+    wait(semaphoreMan)    //  Wait for the man semaphore
+    wait(dancingSemaphore)  //  Wait for the dancing semaphore
+    wait(danceLimit)  //  Wait for the dance limit semaphore
+	dance(danceTime)
+    signal(danceLimit) //  Signal the dance limit semaphore
+
+female:
+    // This ensures that there's at least one man waiting
+    signal(semaphoreMan)  //  Signal the semaphore
+    wait(semaphoreWoman)  //  Wait for the semaphore
+    signal(dancingSemaphore)  //  Signal the semaphore
+    signal(dancingSemaphore)  //  Signal the semaphore
+    wait(dancingSemaphore)  //  Wait for the semaphore
+    wait(danceLimit)  //  Wait for the semaphore
+	dance(danceTime)
+    signal(danceLimit) //  Signal the semaphore

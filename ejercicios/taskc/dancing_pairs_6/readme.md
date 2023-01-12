@@ -1,0 +1,1 @@
+Modifique su solución al problema Ejercicio 43 [dancing_pairs_5] para un baile criollo donde se forman, no parejas, sino equipos de 4 bailarines compuestos de dos hombres y dos mujeres.

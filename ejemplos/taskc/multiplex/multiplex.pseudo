@@ -1,0 +1,13 @@
+procedure main:
+  shared constant skater_count = read_integer()  // The number of skaters (1 to 50000)
+  shared constant skater_capacity = read_integer()  // The maximum weight each skater can carry (1 to 1000)
+  shared can_skate := create_semaphore(skater_capacity)  // The number of skaters that can skate at the same time
+  create_threads(thread_count, secondary)  // Create the threads
+end procedure
+
+procedure secondary:
+  // Bounded waiting
+  wait(can_skate)  // Wait for a skater to be available
+  skate()  // Skate
+  signal(can_skate)  // Signal that a skater is available
+end procedure

@@ -1,0 +1,35 @@
+procedure main:
+  shared can_access_medium := create_semaphore(1)  // 1 means only one process can access the medium at a time
+  shared can_access_reading := create_semaphore(1)  // 1 means only one process can access the reading at a time
+  shared reading_count := 0  // number of processes reading the medium
+
+  while true:  // loop forever
+    case read_char() of:  // read a character from the keyboard
+      'R': create_thread(reader)  // create a reader thread
+      'W': create_thread(writer)  // create a writer thread
+      EOF: return  // end of file, exit the program
+    end case
+  end while
+end procedure
+
+procedure reader:  // reader thread
+  wait(can_access_reading)  // wait for the reading to be available
+    reading_count := reading_count + 1  // increment the number of readers
+    if reading_count = 1 then  // if this is the first reader
+      wait(can_access_medium)  // wait for the medium to be available
+    end if
+  signal(can_access_reading)  // signal that the reading is available
+  read()  // read the medium
+  wait(can_access_reading)  // wait for the reading to be available
+    reading_count := reading_count - 1  // decrement the number of readers
+    if reading_count = 0 then  // if this is the last reader
+      signal(can_access_medium)  // signal that the medium is available
+    end if  
+  signal(can_access_reading)  // signal that the reading is available
+end procedure
+
+procedure writer:
+  wait(can_access_medium)  // wait for the medium to be available
+  write()  // write to the medium
+  signal(can_access_medium)  // signal that the medium is available
+end procedure

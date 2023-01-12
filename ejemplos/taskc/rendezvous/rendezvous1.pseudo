@@ -1,0 +1,20 @@
+procedure main:
+  shared a1_ready := create_semaphor(0) // semaphor for a1
+  shared b1_ready := create_semaphor(0) // semaphor for b1
+  create_thread(thread_a) // create thread a
+  create_thread(thread_b) // create thread b
+end procedure
+
+procedure thread_a:
+  statement a1 // This is executed in parallel with b1
+  signal(a1_ready) // signal that a1 is ready
+  wait(b1_ready) // wait for b1 to be ready 
+  statement a2 // This have to be done when everyone is ready
+end procedure
+
+procedure thread_b:
+  statement b1 // This is executed in parallel with a1
+  signal(b1_ready) // signal that b1 is ready
+  wait(a1_ready) // wait for a1 to be ready
+  statement b2 // This have to be done when everyone is ready
+end procedure

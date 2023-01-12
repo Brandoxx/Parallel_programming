@@ -1,0 +1,13 @@
+procedure main:
+  shared can_access_count := create_semaphore(1)
+  shared count := 0 
+  shared constant thread_count = read_integer() 
+  create_threads(thread_count, secondary) 
+end procedure
+// Same that before, but every thread executes the same code
+procedure secondary:
+  // Critical section
+  wait(can_access_count) // Wait for access to count
+  count := count + 1 // Increment count
+  signal(can_access_count) // Release access to count
+end procedure

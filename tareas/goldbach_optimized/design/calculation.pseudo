@@ -1,0 +1,90 @@
+procedure threadCalculation(threadData):
+Let Number be an structure
+while true
+    mutex.lock()
+    index := threadData.consumed_numbers
+    if index >= threadData.numbers.length
+        mutex.unlock()
+        break
+    else
+        Number = Numbers[index]
+        threadData.consumed_numbers += 1
+        mutex.unlock()
+    end if
+end while
+end threadCalculation
+
+
+procedure goldbach_calculation (var Number : Number structure, var prime numbers : dynamic 64-bit unsigned integer array):
+if number is even
+    goldbach_even_calculation(number, prime numbers)
+else if number is odd
+    goldbach_odd_calculation(number, prime numbers) 
+end goldbach_calculation
+
+
+procedure prime_numbers_calculation (var max number: 64-bit integer):
+Let prime numbers be a 64 bit unsigned integer array
+Let bool be a Boolean array initially set to all true
+for i = 2 to sqrt(max number):
+    if bool[i] is true
+        for j = (i power 2) to max number by i:
+            if j is divisible by i
+                bool[j] = false
+end for
+for i=2 to max number
+    if bool[i] is true
+        add i to prime numbers
+end for
+
+end prime_numbers_calculation
+
+
+procedure goldbach_even_calculation (var Number : 64-bit integer, var prime numbers : dynamic 64-bit unsigned integer array):
+Let primeRange be Number/2
+Let firstAddend be 0
+Let secondAddend be prime number size
+while firstAddend is less than primeRange
+    Let sum be firstAddend + secondAddend
+    if sum is equal to Number
+        if Number is negative
+            Add sum to sums with negative flag
+        end if
+        Number.sumNumber++
+        firstAddend increased to next prime number
+        secondAddend decreased to next prime number
+    else if sum is greater than Number
+        secondAddend decreased to next prime number
+    else
+        firstAddend increased to next prime number
+    end if
+end while
+end even_calculation
+
+procedure goldbach_odd_calculation (var Number : 64-bit integer, var prime numbers : dynamic 64-bit unsigned integer array):
+Let primeRange be Number/2
+Let firstAddend be 0
+Let secondAddend be 0
+while firstAddend < primeRange
+    Let sum be firstAddend + secondAddend
+    let difference be Number - sum
+    if difference is prime
+        if Number is negative
+            Add firstAddend to sums
+            Add secondAddend to sums
+            Add difference to sums
+        end if
+        Number.sumNumber++
+    end if 
+    secondAddend increased to next prime number
+    if secondAddend is greater than primeRange
+        firstAddend increased to next prime number
+        secondAddend = firstAddend
+    end if
+    if firstAddend = 2 and secondAddend != 2
+        firstAddend increased to next prime number
+        secondAddend = firstAddend
+    end if
+end while
+end odd_calculation
+

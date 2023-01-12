@@ -1,0 +1,52 @@
+// Global constants
+process_number    // Number of this process (integer)
+process_count     // Number of processes in the team this process belongs to
+process_hostname  // Name of the computer where this process is running (text)
+any_process       // For accepting messages from any process
+any_tag           // For accepting messages classified with any tag
+
+// Send a variable or array (a set of bytes) to the destination process
+send(message, count, to_process, tag = 0)
+// Receive a set of bytes into a variable from a source process
+receive(&message, count, from_process = any_process, tag = any_tag)
+// Send a variable or array from the source process to the rest
+broadcast(&message, count, from_process)
+// Reduce the data value from all processes to a single result value in
+// destination process applying the given operation
+reduce(data, &result, count, operation, to_process)
+// Reduce the data value from all processes to a single result value that will
+// be available in all processes
+all_reduce(data, &result, count, operation)
+// Distributes an array into subsets for each process using block mapping
+scatter(entire_array, entire_count, &subset_array, &subset_count, from_process)
+// Updates the entire array from the subsets that where assigned to each process
+gather(&entire_array, entire_count, subset_array, subset_count, to_process)
+// Get the wall time for the calling process
+wall_time()
+// Make all processes of a team wait until all of them have reached the barrier
+wait_barrier()
+// we will simulate a game of ping-pong between pair numbers of processes
+procedure main(arc, argv):
+  proccess_count;
+  number_of_ping_pongs := argv[1]  // the number of ping pongs will be given by argument
+  create_team_of_processes(process_count)
+  if process_count = 2:
+    play_ping_pong(process_count, number_of_ping_pongs)
+  else 
+    print "The number of processes must be even"
+
+procedure play_ping_pong(int process_count,int number_of_ping_pongs):
+  int signal := 0
+  int previous_process := (process_count + process_number + 1) mod process_count // previous process
+  int next_process := (process_number + 1) mod process_count
+  for i := 0 to number_of_ping_pongs:
+    int signal := 0
+    if process_number = 0:
+      send(signal, 1, next_process)
+      print("ping")
+      receive(&signal, 1, next_process)
+    else:
+      receive(&signal, 1, previous_process)
+      send(signal, 1, previous_process)
+      print("pong")
+  end for 

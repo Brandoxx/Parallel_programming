@@ -1,0 +1,21 @@
+//  This is a simple rendevous point for the two types of threads
+main:
+	while true:
+		case read_char() of:
+			'M': create_thread(male)
+			'W': create_thread(female)
+			EOF: return
+        semaphoreMan = create_semaphore(0)
+        semaphoreWoman = create_semaphore(0)
+
+male:
+    // This ensures that there's at least one woman waiting
+    signal(semaphoreWoman)  //  Signal the woman semaphore
+    wait(semaphoreMan)    //  Wait for the man semaphore
+	dance()
+
+female:
+    // This ensures that there's at least one man waiting
+    signal(semaphoreMan)  //  Signal the semaphore
+    wait(semaphoreWoman)  //  Wait for the semaphore
+	dance()

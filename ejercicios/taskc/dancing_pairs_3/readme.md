@@ -1,0 +1,1 @@
+Modifique su solución al problema Ejemplo 29 para asegurarse que los bailarines entren en pareja al salón de baile, el cual tiene capacidad ilimitada para la cantidad de parejas.
